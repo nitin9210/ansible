@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  sudo: yes
+  tasks:
+   - name: Creating developer User
+     user:
+      name: developer
+      comment: developer
+      password: $1$SomeSalt$MhP2oMmU.KulmScsMDJ3s.
+      shell: /bin/bash 
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
+      home: /home/developer
+   - name: /home/developer/.ssh/authorized_keys
+     file:
+      path: /home/developer/.ssh/authorized_keys
+      state: touch
+      mode: 400
+      owner: developer
+      group: developer
+   - name: add authorized_keys
+     lineinfile:
+      state: present
+      dest: /home/developer/.ssh/authorized_keys
+      line: "{{ item }}"
+      mode: 0400
+      owner: developer
+      group: developer
+     with_items:
+       - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJTLjXh3zdgiZAk8wHfuusxraARnNqtAW6xsx83ql4P5nZOTK42tkujrka5n4SGIhV49eZMa6LG3FWuuz35fNULZkaT8tjJrEwNqU91NvL5mIU3DFRlg8XZZAtCdtFHzkt49NsOmmKOfermSe8grgcWsf1jsJ0aQcjwP2vqUdVTUE5Qb2hpnIrMveijEcWmB76pVPdvPn4Xf8XxP5e5RSoIm3PpLPOOjBV3q0X43BQohaT6kcN0L7KfNbCX1ZV8WEgEG2MzB2a306j95I1CkxYAc9bnhzqXidTcILKt2BzMYgYyLZJfNKC1yK4ll1kltos8SaV8chKj0FdOpv6ogRT developer@ip-10-1-2-171'
+   - name: Fix 'file' permissions
+     shell: 'chmod 0400 /home/developer/.ssh/authorized_keys'
