@@ -1,7 +1,5 @@
 ---
-- hosts: 10.2.1.132
-  gather_facts: no
-  connection: local
+- hosts: all
   sudo: yes
   tasks:
    - name: Creating developer User
