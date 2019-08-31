@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: 10.2.1.132
   gather_facts: no
   connection: local
   sudo: yes
